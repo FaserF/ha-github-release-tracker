@@ -1,0 +1,11 @@
+{
+  "domain": "gh_release_tracker",
+  "name": "GitHub Release Tracker",
+  "version": "1.0.0",
+  "documentation": "https://github.com/FaserF/ha-github-release-tracker",
+  "dependencies": [],
+  "requirements": ["aiohttp"],
+  "codeowners": ["@FaserF"],
+  "config_flow": true,
+  "iot_class": "cloud_polling"
+}

@@ -1,0 +1,22 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure GitHub Repository",
+        "description": "Set the repository to monitor (either the full GitHub URL or owner/repo).",
+        "data": {
+          "repository": "GitHub Repository (Owner/Repo)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options",
+        "description": "No additional options available.",
+        "data": {}
+      }
+    }
+  }
+}

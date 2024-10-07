@@ -1,0 +1,22 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "GitHub Repository konfigurieren",
+        "description": "Gib das Repository an, das überwacht werden soll (entweder der vollständige GitHub-Link oder Owner/Repo).",
+        "data": {
+          "repository": "GitHub Repository (Owner/Repo)"
+        }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Optionen",
+        "description": "Keine zusätzlichen Optionen verfügbar.",
+        "data": {}
+      }
+    }
+  }
+}
