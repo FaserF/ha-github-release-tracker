@@ -32,7 +32,7 @@ class GitHubReleaseCoordinator(DataUpdateCoordinator):
     async def _async_update_data(self):
         url = f"https://api.github.com/repos/{self.repository}/releases/latest"
         _LOGGER.debug("Fetching data from GitHub API for repository: %s", self.repository)
-        
+
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as response:
                 _LOGGER.debug("Received response with status: %s", response.status)
@@ -45,7 +45,7 @@ class GitHubReleaseCoordinator(DataUpdateCoordinator):
                 _LOGGER.debug("Release data received: %s", release_data)
 
                 # Remove "v" if present in the version
-                version = release_data['tag_name']
+                version = release_data.get('tag_name', '')
                 if version.startswith('v'):
                     version = version[1:]
 
@@ -53,18 +53,31 @@ class GitHubReleaseCoordinator(DataUpdateCoordinator):
 
                 return {
                     "version": version,
-                    "download_url": release_data['assets'][0]['browser_download_url'] if release_data['assets'] else None,
-                    "title": release_data['name']
+                    "html_url": release_data.get('html_url', 'Unknown'),
+                    "title": release_data.get('name', 'Unknown'),
+                    "published_at": release_data.get('published_at', 'Unknown'),
+                    "prerelease": release_data.get('prerelease', False)
                 }
 
 class GitHubReleaseSensor(SensorEntity):
     def __init__(self, coordinator: GitHubReleaseCoordinator):
         _LOGGER.debug("Initializing GitHubReleaseSensor for repository: %s", coordinator.repository)
         self.coordinator = coordinator
+        self._unique_id = self.generate_unique_id(coordinator.repository)
 
     @property
     def name(self):
         return f"GitHub Latest Release {self.coordinator.repository}"
+
+    @property
+    def unique_id(self):
+        return self._unique_id
+
+    def generate_unique_id(self, repository: str) -> str:
+        # Split the repository string into owner and repo name
+        owner, repo = repository.split('/')
+        # Generate unique ID in the format: sensor.github_release_owner_repo
+        return f"sensor.github_release_{owner}_{repo}"
 
     @property
     def state(self):
@@ -75,8 +88,10 @@ class GitHubReleaseSensor(SensorEntity):
     def extra_state_attributes(self):
         _LOGGER.debug("Returning extra state attributes")
         return {
-            "download_url": self.coordinator.data['download_url'],
-            "release_title": self.coordinator.data['title']
+            "html_url": self.coordinator.data['html_url'],
+            "release_title": self.coordinator.data['title'],
+            "published_at": self.coordinator.data['published_at'],
+            "prerelease": self.coordinator.data['prerelease']
         }
 
     @property
