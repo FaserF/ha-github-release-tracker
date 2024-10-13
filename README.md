@@ -1,6 +1,6 @@
 # GitHub Release Tracker Home Assistant Integration
 
-Home Assistant Integration to track the latest GitHub Repository releases.
+Home Assistant Integration to track the latest GitHub Repository releases. This does not require a sign in. But still is less effektive as https://www.home-assistant.io/integrations/github/ 
 
 ## Installation
 ### 1. Using HACS (recommended way)

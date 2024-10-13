@@ -25,15 +25,12 @@ class GitHubConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             # Extract repository owner and name from the URL
             if "github.com" in repository:
-                # Remove 'https://', 'http://', and 'www.' if present
                 repository = repository.replace("https://", "").replace("http://", "").replace("www.", "")
-                # Remove any leading path to only keep the owner/repo part
-                repository = repository.split("github.com/")[-1]  # Get only the part after 'github.com/'
+                repository = repository.split("github.com/")[-1]
                 _LOGGER.debug("Formatted repository as: %s", repository)
             elif '/' in repository:
                 _LOGGER.debug("Got a valid input without full URL. Formatted repository as: %s", repository)
             else:
-                # If user didn't provide a valid URL, return an error or prompt for correct input
                 _LOGGER.error("Invalid repository format. Please provide a valid GitHub repository URL.")
                 return self.async_show_form(
                     step_id="user",
@@ -43,8 +40,9 @@ class GitHubConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     errors={"repository": "Invalid format. Please provide a GitHub URL."}
                 )
 
+            title = repository.replace('/', ' ')  # Format title as "RepoOwner RepoName"
             _LOGGER.debug("Creating config entry for repository: %s", repository)
-            return self.async_create_entry(title="GitHub Release Sensor", data={"repository": repository})
+            return self.async_create_entry(title=title, data={"repository": repository})
 
         _LOGGER.debug("Showing form to user")
         return self.async_show_form(
